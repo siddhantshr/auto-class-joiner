@@ -1,9 +1,9 @@
 {
-    "monday": ["maths", "computer", "history", "hindi", "physics"],
+    "monday": ["", "", "", "", ""],
     "tuesday": ["", "", "", "", ""],
     "wednesday": ["", "", "", "", ""],
     "thursday": ["", "", "", "", ""],
     "friday": ["", "", "", "", ""],
     "saturday": ["", "", "", "", ""],
-    "sunday": ["maths", "computer", "history", "hindi", "physics"]
+    "sunday": ["", "", "", "", ""]
 }

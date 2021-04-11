@@ -8,14 +8,17 @@ def open_link(url: str):
         exit(f"{url} is not a valid URL")
     webbrowser.open(url)
     
-def check_current_time(now, hours: str, minutes: str):
-    return str(now.strftime("%H")) == hours and str(now.strftime("%M")) == minutes
+def check_current_time(now, time: str):
+    time = time.split(" ")
+    return str(now.strftime("%H")) == time[0] and str(now.strftime("%M")) == time[1]
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 try:
-    with open(dir_path + "/data/classes.json", 'r') as f, open(dir_path + "/data/links.json", 'r') as f2:
+    with open(dir_path + "/data/classes.json", 'r') as f, open(dir_path + "/data/links.json", 'r') as f2,\
+open(dir_path + "/data/timetable.json", "r") as f3:
         classes = json.load(f)
         links = json.load(f2)
+        timetable = json.load(f3)
 except FileNotFoundError:
     exit("Could not find the data files")
 
@@ -40,27 +43,27 @@ def main():
     while 1:
         if all(x != None for x in done_jobs):
             exit("Exiting, all classes done")
-        if check_current_time(datetime.datetime.now(), "08", "30"):
+        if check_current_time(datetime.datetime.now(), timetable["class1"]):
             if done_jobs[0] is None:
                 print("Opening class 1")
                 open_class(0)
                 done_jobs[0] = "Done"
-        if check_current_time(datetime.datetime.now(), "09", "20"):
+        if check_current_time(datetime.datetime.now(), timetable["class2"]):
             if done_jobs[1] is None:
                 print("Opening class 2")
                 open_class(1)
                 done_jobs[1] = "Done"
-        if check_current_time(datetime.datetime.now(), "10", "20"):
+        if check_current_time(datetime.datetime.now(), timetable["class3"]):
             if done_jobs[2] is None:
                 print("Opening class 3")
                 open_class(2)
                 done_jobs[2] = "Done"
-        if check_current_time(datetime.datetime.now(), "11", "10"):
+        if check_current_time(datetime.datetime.now(), timetable["class4"]):
             if done_jobs[3] is None:
                 print("Opening class 4")
                 open_class(3)
                 done_jobs[3] = "Done"
-        if check_current_time(datetime.datetime.now(), "12", "00"):
+        if check_current_time(datetime.datetime.now(), timetable["class5"]):
             if done_jobs[4] is None:
                 print("Opening class 5")
                 open_class(4)

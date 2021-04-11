@@ -17,7 +17,13 @@ A code that will help you join your classes automatically, without needing for y
 
     ![Classes Json File](images/classes-json.png)
 
-5. Run the `__main__.py` file with `python3 __main__.py` and you're done. Just keep the file running and it will join classes automatically.
+
+5. Set your time table in the `data/timetable.json` file. Ex:
+
+
+    ![TimeTable Json File](images/timetable-json.png)
+
+6. Run the `__main__.py` file with `python3 __main__.py` and you're done. Just keep the file running and it will join classes automatically.
 
 ### Notes
 * Use python 3, instead of python2
