@@ -8,11 +8,11 @@ A code that will help you join your classes automatically, without needing for y
 2. Clone the repository to a dir and change directory to it `git clone https://github.com/AHiddenDonut/auto-class-joiner`
 
 3. Insert your links into the `data/links.json` file. Ex:
-
 ![Links Json File](images/links-json.png)
-4. Set your time table in the `data/classes.json` file. Ex:
 
+4. Set your time table in the `data/classes.json` file. Ex:
 ![Classes Json File](images/classes-json.png)
+
 5. Run the `__main__.py` file with `python3 __main__.py` and you're done. Just keep the file running and it will join classes automatically.
 
 ### Notes
