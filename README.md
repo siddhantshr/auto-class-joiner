@@ -18,11 +18,6 @@ A code that will help you join your classes automatically, without needing for y
     ![Classes Json File](images/classes-json.png)
 
 
-5. Set your time table in the `data/timetable.json` file. The times should be in `[hh] [mm]` format seprated by spaces. Note: times to be written in the 24 hour format. Ex:
-
-
-    ![TimeTable Json File](images/timetable-json.png)
-
 6. Run the `__main__.py` file with `python3 __main__.py` and you're done. Just keep the file running and it will join classes automatically.
 
 ### Notes
