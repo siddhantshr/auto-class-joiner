@@ -55,12 +55,14 @@ def add_record():
             print("Invalid input!")
         except Exception:
             print("Invalid input!")
-
     with open("data/classes.json") as f:
         try:
             dictionary = json.load(f)
         except json.decoder.JSONDecodeError:
             dictionary = {}
+    if timed in dictionary:
+        print("Please edit the record and not add another!")
+        return
     subjects =[]
     while input("Enter a subject? (y/n): ").lower() == "y":
         print("Here are the valid subjects and links: ")
@@ -83,7 +85,60 @@ def add_record():
         f.write(json.dumps(dictionary, indent = 4))
     
 
+def edit_record():
+    with open("data/classes.json") as f:
+        try:
+            dictionary = json.load(f)
+        except json.decoder.JSONDecodeError:
+            print("No record found!")
+            return
+    while (user:=input("Select day: ").lower()) not in dictionary: print("Invalid day!")
+    user = user.lower()
+    while (timed:=input("Select time: ")) not in dictionary[user]: print("Invalid time!")
+    for i in dictionary[user][timed]:
+        print(i)
+    print("Here are the subjects in the slot.")
+    subjects = dictionary[user][timed]
+    print("""
+1. Add subject
+2. Remove subject""")
+    while not ((user1:=input("Select option: ")).isdigit() and int(user1) in range(1,3)):
+            print("Invalid option")
+    if user1 == "1":
+        while input("Enter a subject? (y/n): ").lower() == "y":
+            print("Here are the valid subjects and links: ")
+            check = view_links()
+            if not check:
+                print("No links available!")
+                print("Please add the subject in links.json first!")
+                return
+            else:
+                while (subject:=input("Enter subject: ")) not in check:
+                    print("Invalid subject")
+                    if input("Do you want to return? (y/n): ").lower() == "y":
+                        return
+                subjects.append(subject)
+        
+    else:
+        print("Here are the valid subjects:",*subjects, sep ="\n")
+        while input("Remove a subject? (y/n): ").lower() == "y" and subjects!=[]:
+            while (subject:=input("Enter subject: ")) not in subjects:
+                print("Invalid subject")
+            subjects.remove(subject)
+    if subjects:
+        dictionary[user][timed] = subjects
+    else:
+        del dictionary[user][timed]
+    with open("data/classes.json", "w") as f:
+        f.write(json.dumps(dictionary, indent = 4))
 
+def remove_all():
+    if input("Write confirm and press enter to continue: ")!= "confirm":
+        return
+    with open("data/classes.json", "w") as f:
+            f.write("")
+
+    
 def main():
     print("Generating timetable.json!")
     while True:
@@ -91,11 +146,10 @@ def main():
 1. View Timetable
 2. Add record
 3. Edit record
-4. Remove record
 5. Delete all contents
 6. Done
               """)
-        switch = {"1": view_timetable, "2": add_record, "3": edit_record, "4": remove_record, "5": remove_all, "6": exit}
+        switch = {"1": view_timetable, "2": add_record, "3": edit_record, "5": remove_all, "6": exit}
         while not ((user:=input("Select option: ")).isdigit() and int(user) in range(1,7)):
             print("Invalid option")
         switch[user]()
