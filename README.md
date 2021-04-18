@@ -22,7 +22,6 @@ A code that will help you join your classes automatically, without needing for y
 
 ### Notes
 * Use python 3.8+
-* This code is made to join 5 classes, but you can operate it with 4 classes, if you want a modified version instead, DM me at discord on `Donut#4427`
 * DM me at `Donut#4427` for help
 * Note that this can be used on any meeting platform that supports links. Ex: zoom..
 
