@@ -1,76 +1,61 @@
-import webbrowser, datetime, json, os
+import webbrowser, datetime, json, time
 
-def open_link(url: str):
+def read_data() -> dict:
     try:
-        if url[0:8] != "https://":
-            url = f"https://{url}"
-    except IndexError:
-        exit(f"{url} is not a valid URL")
-    webbrowser.open(url)
-    
-def check_current_time(now, time: str):
-    time = time.split(" ")
-    return str(now.strftime("%H")) == time[0] and str(now.strftime("%M")) == time[1]
+        with open("data/classes.json") as file:
+            data = json.load(file)
+        return data
+    except:
+        print("classes.json not found in data folder!\nPlease ensure that __main__ is in the correct directory")
+        exit(1)
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-try:
-    with open(dir_path + "/data/classes.json", 'r') as f, open(dir_path + "/data/links.json", 'r') as f2,\
-open(dir_path + "/data/timetable.json", "r") as f3:
-        classes = json.load(f)
-        links = json.load(f2)
-        timetable = json.load(f3)
-except FileNotFoundError:
-    exit("Could not find the data files")
+def get_day() -> str:
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    day = days[datetime.datetime.today().weekday()]
+    return day
 
-def getCurrentDay():
-    return datetime.datetime.now().strftime("%A")
 
-def getCurrentClass(idx: int):
+def get_time_difference(input_time:str) -> int:
+    hours, minutes, seconds = time.localtime()[3:6]
+    current_time = hours*3600 + minutes*60 + seconds
+    hours, minutes = map(int,input_time.split(":"))
+    difference = (3600*hours + 60*minutes) - current_time 
+    return difference, input_time
+
+def get_links():
     try:
-        return classes[getCurrentDay().lower()][idx]
-    except IndexError:
-        print("E")
-        exit("Could not find the current scheduled class")
+        with open("data/links.json") as f:
+            return {i.lower():j for i,j in json.load(f).items()}
+    except:
+        print("links.json not found in data folder!\nPlease ensure that __main__ is in the correct directory")
+        exit(1)
 
-def open_class(idx: int):
-    cc = getCurrentClass(idx)
-    if cc == "":
-        exit("Could not find the current scheduled class")
-    open_link(links[cc])
+def remove(data, key):
+    del data[key]
+    if data == {}:
+        print("No more classes scheduled for today!\n\n")
+        exit(0)
 
 def main():
-    done_jobs = [None, None, None, None, None]
-    while 1:
-        if all(x != None for x in done_jobs):
-            exit("Exiting, all classes done")
-        if check_current_time(datetime.datetime.now(), timetable["class1"]):
-            if done_jobs[0] is None:
-                print("Opening class 1")
-                open_class(0)
-                done_jobs[0] = "Done"
-        if check_current_time(datetime.datetime.now(), timetable["class2"]):
-            if done_jobs[1] is None:
-                print("Opening class 2")
-                open_class(1)
-                done_jobs[1] = "Done"
-        if check_current_time(datetime.datetime.now(), timetable["class3"]):
-            if done_jobs[2] is None:
-                print("Opening class 3")
-                open_class(2)
-                done_jobs[2] = "Done"
-        if check_current_time(datetime.datetime.now(), timetable["class4"]):
-            if done_jobs[3] is None:
-                print("Opening class 4")
-                open_class(3)
-                done_jobs[3] = "Done"
-        if check_current_time(datetime.datetime.now(), timetable["class5"]):
-            if done_jobs[4] is None:
-                print("Opening class 5")
-                open_class(4)
-                done_jobs[4] = "Done"
+    data = read_data()[get_day().lower()]
+    links = get_links()
+    while True:
+        while (wait:=min(map(get_time_difference, data)))[0] < 0:
+            print(", ".join(data[wait[1]]),f"scheduled at {wait[1]} completed!\n")
+            remove(data, wait[1])
+        time.sleep(wait[0])
+        for subject in data[wait[1]]:
+            try:
+                if links[subject.lower()] != "":
+                    print(f"Opening class {subject}")
+                    webbrowser.open(links[subject.lower()])
+                    continue
+            except KeyError:
+                ...
+            print(f"Error, could not join class. Subject {subject} not available in links!")
+            remove(data, wait[1])
 
-if __name__ == '__main__':
-    print(r"""
+print(r"""
     _         _           ____ _               
    / \  _   _| |_ ___    / ___| | __ _ ___ ___ 
   / _ \| | | | __/ _ \  | |   | |/ _` / __/ __|
@@ -82,11 +67,14 @@ if __name__ == '__main__':
  _  | |/ _ \| | '_ \ / _ \ '__| |
 | |_| | (_) | | | | |  __/ |  |_|
  \___/ \___/|_|_| |_|\___|_|  (_)
-
--------------------------------------------------
-<-- AHiddenDonut - https://github.com/AHiddenDonut
-Copyright (c) 2021 AHiddenDonut
-
-Running successfully -- No Errors!
-""")
-    main()
+-------------------------------------------------""")
+main()
+                
+                
+            
+            
+    
+            
+            
+        
+    
